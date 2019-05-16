@@ -54,20 +54,6 @@ public class ReceiptPrinterService extends Service {
             Log.e(TAG, "Failed to connect to capability or accessory manager", e);
         }
     }
-    // we do this if there are multiple accessories connected of the same type/provider
-    private List<AccessoryProvider> findMatchingProviders(AccessoryProvider provider) {
-        ArrayList<AccessoryProvider> matchedProviders = new ArrayList<>();
-        if (providers != null) {
-            for (AccessoryProvider printer : providers) {
-                if (provider.getAccessoryType() == printer.getAccessoryType()
-                        && provider.getPackageName().equals(printer.getPackageName())
-                        && provider.getClassName().equals(printer.getClassName())) {
-                    matchedProviders.add(printer);
-                }
-            }
-        }
-        return matchedProviders;
-    }
     private AccessoryProviderServiceHelper.AccessoryManagerConnectionCallback makeAMCCallback() {
         return new AccessoryProviderServiceHelper.AccessoryManagerConnectionCallback() {
             @Override
@@ -93,6 +79,21 @@ public class ReceiptPrinterService extends Service {
                 Log.d(TAG, "Disconnected with accessory service manager");
             }
         };
+    }
+
+    // we do this if there are multiple accessories connected of the same type/provider
+    private List<AccessoryProvider> findMatchingProviders(AccessoryProvider provider) {
+        ArrayList<AccessoryProvider> matchedProviders = new ArrayList<>();
+        if (providers != null) {
+            for (AccessoryProvider printer : providers) {
+                if (provider.getAccessoryType() == printer.getAccessoryType()
+                        && provider.getPackageName().equals(printer.getPackageName())
+                        && provider.getClassName().equals(printer.getClassName())) {
+                    matchedProviders.add(printer);
+                }
+            }
+        }
+        return matchedProviders;
     }
 
     // this is the accessory manager listener which gets invoked when accessory manager completes
